@@ -1,17 +1,10 @@
 pipeline {
-    agent any
+    agent { docker 'maven:3.3.3' }
     stages {
-      stage('Lint HTML') {
-        steps {
-          sh 'tidy -q -e index.html'
+        stage('build') {
+            steps {
+                sh 'mvn --version'
+            }
         }
-      }
-      stage('Upload to AWS') {
-        steps {
-          withAWS(region:'us-east-2',credentials:'AWS') {
-            s3Upload(pathStyleAccessEnabled:true, payloadSigningEnabled: true, file:'index.html', bucket:'c3pipelinesdemo')
-          }
-        }
-      }
     }
 }
